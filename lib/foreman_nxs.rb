@@ -1,3 +1,3 @@
 module ForemanPluginTemplate
-  require 'foreman_plugin_template/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  require 'foreman_nxs/engine' if defined?(Rails) && Rails::VERSION::MAJOR == 3
 end

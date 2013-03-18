@@ -4,35 +4,36 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "foreman_plugin_template"
-  s.version = ""
+  s.name = "foreman_nxs"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Sample Name"]
-  s.date = "2012-12-13"
-  s.description = "Plugin engine for Foreman "
-  s.email = "name@example.com"
+  s.authors = ["Arnoud de Jonge"]
+  s.date = "2013-02-12"
+  s.description = "Nxs API extension for Foreman"
+  s.email = "arnoud.dejonge@nxs.nl"
   s.extra_rdoc_files = [
+    "LICENSE",
     "README.md"
   ]
   s.files = [
     "Gemfile",
     "Gemfile.lock",
+    "LICENSE",
     "README.md",
     "Rakefile",
-    "app/controllers/foreman_plugin_template/hosts_controller.rb",
-    "app/models/foreman_plugin_template/host_extensions.rb",
-    "app/views/foreman_plugin_template/hosts/new_action.html.erb",
-    "app/views/foreman_plugin_template/layouts/new_layout.html.erb",
+    "app/controllers/foreman_nxs/hosts_controller.rb",
     "config/routes.rb",
-    "lib/engine.rb",
-    "lib/foreman_plugin_template.rb"
+    "foreman_nxs.gemspec",
+    "lib/foreman_nxs.rb",
+    "lib/foreman_nxs/engine.rb",
+    "test/tests_go_here"
   ]
-  s.homepage = "http://github.com/isratrade/foreman_plugin_template"
-  s.licenses = ["GPL-3"]
+  s.homepage = "http://github.com/arnoudj/foreman_nxs"
+  s.licenses = ["Apache License, Version 2.0"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
-  s.summary = "Plugin engine for Foreman"
+  s.rubygems_version = "1.8.15"
+  s.summary = "Nxs API extension for Foreman"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

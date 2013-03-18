@@ -2,7 +2,12 @@
 Rails.application.routes.draw do
 
   namespace :api, :defaults => {:format => 'json'} do
-    # Nxs Extensions to the API
-    match '/hosts/:host/vhosts/:vhost', :to => 'foreman_nxs/hosts#vhost', :except => [:create]
+    namespace :nxs do
+      constraints(:id => /[^\/]+/) do
+        resources :hosts do
+          resources :vhosts, :path => '/apache/vhosts'
+        end
+      end
+    end
   end
 end

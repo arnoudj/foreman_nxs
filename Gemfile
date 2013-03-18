@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 # Add dependencies here.
+gem "active_hash"
 
 group :development do
   gem "bundler"
