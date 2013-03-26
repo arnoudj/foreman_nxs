@@ -1,6 +1,6 @@
 module Api
   module Nxs
-    #class VhostsController < ActionController::Base
+
     class VhostsController < Api::Nxs::BaseController
 
       api :GET, "/api/nxs/hosts/:host_id/apache/vhosts", "List all Apache virtual hosts defined for the specified host."
@@ -25,17 +25,21 @@ module Api
         end
       end
 
+      api :PUT, "/api/nxs/hosts/:host_id/apache/vhosts/:id", "Update or create an Apache virtual host for the specified host."
+
       def update
         h = Host.find_by_name!(params[:host_id])
 
         lv = h.puppetclasses.find_by_name!("nxs::apache").class_params.find_by_key!("vhosts").lookup_values.find_or_create_by_match("fqdn=#{params[:host_id]}")
-        @value = lv.value[params[:id]] or Hash.new
+        @value = Hash.new
         @value['owner'] = params[:owner] if params[:owner]
         @value['aliases'] = params[:aliases] if params[:aliases]
         lv.value[params[:id]] = @value
         lv.save
         @value
       end
+
+      api :DELETE, "/api/nxs/hosts/:host_id/apache/vhosts/:id", "Delete an Apache virtual host for the specified host."
 
       def destroy
         h = Host.find_by_name!(params[:host_id])
