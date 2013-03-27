@@ -25,7 +25,20 @@ module Api
         end
       end
 
-      api :PUT, "/api/nxs/hosts/:host_id/apache/vhosts/:id", "Update or create an Apache virtual host for the specified host."
+      api :PUT, "/api/nxs/hosts/:host_id/apache/vhosts/:id", "Update or create an Apache virtual host for the specified host.When updating, all parameters will be overwritten with the supplied parameters."
+      param :ensure, String
+      param :owner, String, :required => true
+      param :ip, String
+      param :ipv6, String
+      param :port, :number
+      param :aliases, Array
+      param :has_ssl, String
+      param :sslport, :number
+      param :ssl_docroot, String
+      param :sslkey, String
+      param :sslcert, String
+      param :sslchain, String
+      param :extra, String
 
       def update
         h = Host.find_by_name!(params[:host_id])

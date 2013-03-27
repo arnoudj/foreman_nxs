@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     namespace :nxs do
       constraints(:id => /[^\/]+/) do
         resources :hosts do
-          resources :vhosts, :path => '/apache/vhosts'
+          resources :vhosts, :path => '/apache/vhosts', :except => :create
         end
       end
     end
