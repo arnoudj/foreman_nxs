@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     namespace :nxs do
       constraints(:id => /[^\/]+/) do
         resources :hosts do
-          namespace :apache do
+          resource :apache, :controller => :apache do
             resources :vhosts, :except => :create
           end
         end
