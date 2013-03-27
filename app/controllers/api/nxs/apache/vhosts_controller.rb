@@ -4,6 +4,8 @@ module Api
 
       class VhostsController < Api::Nxs::BaseController
 
+#        include Api::Paramchecker
+
         api :GET, "/api/nxs/hosts/:host_id/apache/vhosts", "List all Apache virtual hosts defined for the specified host."
 
         def index

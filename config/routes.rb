@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       constraints(:id => /[^\/]+/) do
         resources :hosts do
           resource :apache, :controller => :apache do
-            resources :vhosts, :except => :create
+            resources :vhosts, :except => :create, :controller => 'apache/vhosts'
           end
         end
       end
