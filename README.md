@@ -1,7 +1,19 @@
-# foreman_plugin_template
+# foreman_resources
 
-Readme goes here
+Manage resources for a Puppet class. For example vhosts for a Puppet class or
+users, databases and grants for a MySQL class.
 
+Parameterized classes can be managed by Foreman. For basic types an input
+validation can also be added, via a regexp. This plugin will add validation
+for resources of a Puppet class.
+
+Resources for all the Puppet classes are described in a JSON-schema. Parameters
+are validated against this schema before they are commited to the Foreman
+database.
+
+# See also:
+
+JSON schema: <http://json-schema.org>
 
 # Installation:
 

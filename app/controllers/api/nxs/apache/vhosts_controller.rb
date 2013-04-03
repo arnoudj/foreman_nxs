@@ -4,9 +4,7 @@ module Api
 
       class VhostsController < Api::Nxs::BaseController
 
-#        include Api::Paramchecker
-
-        api :GET, "/api/nxs/hosts/:host_id/apache/vhosts", "List all Apache virtual hosts defined for the specified host."
+        api :GET, "/nxs/hosts/:host_id/apache/vhosts", "List all Apache virtual hosts defined for the specified host."
 
         def index
           h = Host.find_by_name!(params[:host_id])
@@ -23,12 +21,10 @@ module Api
             @vhost
           else
             render "api/nxs/errors/not_found", :status => 404
-            #head :status => 404
-            return
           end
         end
 
-        api :PUT, "/api/nxs/hosts/:host_id/apache/vhosts/:id", "Update or create an Apache virtual host for the specified host.When updating, all parameters will be overwritten with the supplied parameters."
+        api :PUT, "/nxs/hosts/:host_id/apache/vhosts/:id", "Update or create an Apache virtual host for the specified host.When updating, all parameters will be overwritten with the supplied parameters."
         param :ensure, String
         param :owner, String, :required => true
         param :ip, String
@@ -55,7 +51,7 @@ module Api
           @value
         end
 
-        api :DELETE, "/api/nxs/hosts/:host_id/apache/vhosts/:id", "Delete an Apache virtual host for the specified host."
+        api :DELETE, "/nxs/hosts/:host_id/apache/vhosts/:id", "Delete an Apache virtual host for the specified host."
 
         def destroy
           h = Host.find_by_name!(params[:host_id])

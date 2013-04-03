@@ -2,6 +2,16 @@
 Rails.application.routes.draw do
 
   namespace :api, :defaults => {:format => 'json'} do
+    constraints(:id => /[^\/]+/) do
+      resources :hosts do
+        resources :classes do
+          resources :resources, :except => :create
+        end
+      end
+    end
+  end
+
+  namespace :api, :defaults => {:format => 'json'} do
     namespace :nxs do
       constraints(:id => /[^\/]+/) do
         resources :hosts do
