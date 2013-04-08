@@ -4,8 +4,10 @@ Rails.application.routes.draw do
   namespace :api, :defaults => {:format => 'json'} do
     constraints(:id => /[^\/]+/) do
       resources :hosts do
-        resources :classes do
-          resources :resources, :except => :create
+        resources :puppetclasses do
+          resources :types, :only => :[:index, :show] do
+            resources :resources
+          end
         end
       end
     end
