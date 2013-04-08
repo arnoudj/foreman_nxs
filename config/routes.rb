@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     constraints(:id => /[^\/]+/) do
       resources :hosts do
         resources :puppetclasses do
-          resources :types, :only => :[:index, :show] do
+          resources :types, :only => [:index, :show] do
             resources :resources
           end
         end

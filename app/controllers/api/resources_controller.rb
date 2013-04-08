@@ -1,19 +1,56 @@
-module Api
-  class ResourcesController < Api::BaseController
+require 'json-schema'
 
-    def api_version
-      '1'
-    end
+module Api
+  class ResourcesController < Api::ResourcesBaseController
+    include Api::ResourcesSchema
 
     def index
-      @data = Rails.root
+      h = Host.find_by_name!(params[:host_id])
+      if schema['properties'][params[:puppetclass_id]]['properties'].has_key?(params[:type_id])
+        @data = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).value_for(h)
+      else
+        render "api/v1/errors/not_found", :status => 404
+      end
     end
 
     def show
       h = Host.find_by_name!(params[:host_id])
-      @data = h.puppetclasses.find_by_name!(params[:class_id]).class_params.find_by_key!(params[:id]).value_for(h)
-      schema = Rails.root.join('public','resources.json').to_s
+      if schema['properties'][params[:puppetclass_id]]['properties'].has_key?(params[:type_id])
+        @data = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).value_for(h)[params[:id]] or render "api/v1/errors/not_found", :status => 404
+      else
+        render "api/v1/errors/not_found", :status => 404
+      end
     end
+
+    def update
+      @value = JSON.parse(request.body.read)
+      data = {
+        params[:puppetclass_id] => {
+          params[:type_id] => {
+            params[:id] => @value
+          }
+        }
+      }
+      JSON::Validator.validate!(schema, data, :validate_schema => true)
+
+      h = Host.find_by_name!(params[:host_id])
+
+      lv = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).lookup_values.find_or_create_by_match("fqdn=#{params[:host_id]}")
+      lv.value[params[:id]] = @value
+      lv.save
+    end
+
+    def destroy
+      h = Host.find_by_name!(params[:host_id])
+      if schema['properties'][params[:puppetclass_id]]['properties'].has_key?(params[:type_id])
+        lv = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).lookup_values.find_by_match!("fqdn=#{params[:host_id]}")
+        @value = lv.value.delete(params[:id])
+        lv.save
+      else
+        render "api/v1/errors/not_found", :status => 404
+      end
+    end
+
   end
 end
 
