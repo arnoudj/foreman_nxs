@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "foreman_nxs"
+  s.name = "foreman_resources"
   s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Arnoud de Jonge"]
   s.date = "2013-02-12"
-  s.description = "Nxs API extension for Foreman"
+  s.description = "API extension for Foreman to manage class resources"
   s.email = "arnoud.dejonge@nxs.nl"
   s.extra_rdoc_files = [
     "LICENSE",
@@ -22,14 +22,15 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README.md",
     "Rakefile",
-    "app/controllers/foreman_nxs/hosts_controller.rb",
+    "lib/foreman_resources/engine.rb",
+    "lib/foreman_resources.rb",
+    "app/controllers/api/resources_base_controller.rb",
+    "app/controllers/api/types_controller.rb",
+    "app/controllers/api/resources_schema.rb",
+    "app/controllers/api/resources_controller.rb",
     "config/routes.rb",
-    "foreman_nxs.gemspec",
-    "lib/foreman_nxs.rb",
-    "lib/foreman_nxs/engine.rb",
-    "test/tests_go_here"
   ]
-  s.homepage = "http://github.com/arnoudj/foreman_nxs"
+  s.homepage = "http://github.com/arnoudj/foreman_resources"
   s.licenses = ["Apache License, Version 2.0"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.15"

@@ -1,15 +1,21 @@
 # foreman_resources
 
-Manage resources for a Puppet class. For example vhosts for a Puppet class or
-users, databases and grants for a MySQL class.
+A lot of my Puppet classes use the create\_resources function to create
+resources on the server. For instance my apache class uses this function
+to manage vhosts and the sudo class manages the the sudoers entries. The
+resouces are passed to the class via a parameter, which contains a hash
+with the resources.
 
-Parameterized classes can be managed by Foreman. For basic types an input
-validation can also be added, via a regexp. This plugin will add validation
-for resources of a Puppet class.
+As I use foreman as my ENC, I want to be able to use the parameterized
+classes of foreman. Only drawback of foreman, is that I can't validate
+JSON or YAML fields. This is where this plugin comes in.
 
-Resources for all the Puppet classes are described in a JSON-schema. Parameters
-are validated against this schema before they are commited to the Foreman
-database.
+Resources for the Puppet classes are described in a JSON-schema. Parameters
+are validated against this schema before they are commited to the
+lookup\_values table. Lookup values are stored with a fqdn=hostname match.
+
+Resources are accessable only via an API at this moment. See *usage* for
+the API calls.
 
 # See also:
 
@@ -17,15 +23,112 @@ JSON schema: <http://json-schema.org>
 
 # Installation:
 
+Add a file to the bundler.d directory of foreman:
+
+*/bundler.d/resources.rb*
+
+    gem 'json-schema'
+    gem 'foreman_resources', :path => '/usr/share/foreman_resources'
+
+Next, as a Foreman user (not root), run the following command:
+
+    $ bundle install
+
+Copy your [resources.json](examples/resources.json) to the
+[foreman\_root]/public/resources.json. In the examples directory is
+a sample resources.json which can be used with the
+[sudo](https://github.com/arnoudj/puppet-sudo) class.
 
 # Usage
 
+The following API calls are added to the foreman API to manage the
+resources.
+
+## GET /api/hosts/:host\_id/puppetclasses/:puppetclass\_id/types
+
+Returns a JSON array of all the resource types known for this puppetclass.
+
+### Example
+
+    GET /api/hosts/host01.example.com/puppetclasses/apache/types
+    200
+    ["vhosts", "modules"]
+
+## GET /api/hosts/:host\_id/puppetclasses/:puppetclass\_id/types/:id
+
+Returns a JSON hash with all the resources of this resource type.
+
+### Example
+
+    GET /api/hosts/host01.example.com/puppetclasses/apache/types/vhosts
+    200
+    [ "www.example.com", "secure.example.com" ]
+
+## GET /api/hosts/:host\_id/puppetclasses/:puppetclass\_id/types/:type\_id/resources
+
+Returns a JSON hash with all the resources of this resource type.
+
+### Example
+
+    GET /api/hosts/host01.example.com/puppetclasses/apache/types/vhosts
+    200
+    {
+      "www.example.com": {
+        "documentroot": "/var/www/www.example.com",
+        "user":         "www-data"
+      },
+      "secure.example.com": {
+        "documentroot": "/var/www/www.example.com",
+        "user":         "www-data"
+      }
+    }
+
+## GET /api/hosts/:host\_id/puppetclasses/:puppetclass\_id/types/:type\_id/resources/:id
+
+Returns a JSON hash with the data for the resource.
+
+### Example
+
+    GET /api/hosts/host01.example.com/puppetclasses/apache/types/vhosts
+    200
+    {
+        "documentroot": "/var/www/www.example.com",
+        "user":         "www-data"
+    }
+
+## POST /api/hosts/:host\_id/puppetclasses/:puppetclass\_id/types/:type\_id/resources/:id
+
+Update the data for the resource. If the resource does not exist, it will be created.
+
+### Example
+
+    POST /api/hosts/host01.example.com/puppetclasses/apache/types/vhosts
+    {
+        "documentroot": "/var/www/www.example.com",
+        "user":         "www-data"
+    }
+    200
+    {
+        "documentroot": "/var/www/www.example.com",
+        "user":         "www-data"
+    }
+
+## DELETE /api/hosts/:host\_id/puppetclasses/:puppetclass\_id/types/:type\_id/resources/:id
+
+Delete a resource. The data of the deleted resource is returned as JSON.
+
+### Example
+
+    DELETE /api/hosts/host01.example.com/puppetclasses/apache/types/vhosts
+    200
+    {
+        "documentroot": "/var/www/www.example.com",
+        "user":         "www-data"
+    }
 
 # Copyright
 
-[Update copyright accordingly.  GPLv3 is used as Foreman itself is.]
-
-Copyright (c) 2012-2013 Red Hat Inc.
+Copyright (c) 2013 Arnoud de Jonge, Nxs Internet B.V.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

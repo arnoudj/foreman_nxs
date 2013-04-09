@@ -9,16 +9,16 @@ module Api
       if schema['properties'][params[:puppetclass_id]]['properties'].has_key?(params[:type_id])
         @data = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).value_for(h)
       else
-        render "api/v1/errors/not_found", :status => 404
+        render "api/errors/not_found", :status => 404
       end
     end
 
     def show
       h = Host.find_by_name!(params[:host_id])
       if schema['properties'][params[:puppetclass_id]]['properties'].has_key?(params[:type_id])
-        @data = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).value_for(h)[params[:id]] or render "api/v1/errors/not_found", :status => 404
+        @data = h.puppetclasses.find_by_name!(params[:puppetclass_id]).class_params.find_by_key!(params[:type_id]).value_for(h)[params[:id]] or render "api/errors/not_found", :status => 404
       else
-        render "api/v1/errors/not_found", :status => 404
+        render "api/errors/not_found", :status => 404
       end
     end
 
@@ -47,7 +47,7 @@ module Api
         @value = lv.value.delete(params[:id])
         lv.save
       else
-        render "api/v1/errors/not_found", :status => 404
+        render "api/errors/not_found", :status => 404
       end
     end
 
